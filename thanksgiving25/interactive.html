@@ -1,7 +1,6 @@
 <!-- Chosen Palette: Vibrant Rust & Autumn (Aesthetic Base) -->
 <!-- Application Structure Plan: The layout is now a 2x2 grid (Protein, Feast) followed by a full-width section header, then a second 2x2 grid (Hike, Movie), concluding with a full-width summary (Activities). This structure clearly separates Food planning from Fun planning. -->
 <!-- Color Scheme Update: The vibrant autumn theme (#D95550 Rust, #E8A87C Orange) is retained as accent colors against a clean white background. -->
-<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All charts are Chart.js on Canvas. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Restored Cleaner Off-white Background */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #FDFBF8; /* Cleaner Off-white */
@@ -60,7 +58,6 @@
             background-color: #FDFBF8;
         }
         
-        /* New Text Colors adjusted for light background */
         .header-main { color: #40312E; } /* Main text is Deep Brown */
         .header-sub { color: #D95550; } /* Sub-header is Rust Red */
         .header-card { color: #D95550; } /* Card title is Rust Red */
@@ -97,7 +94,6 @@
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
 
         <header class="text-center my-8 md:my-12">
-            <!-- Large Turkey Image Replacement -->
             <div class="mb-4 p-4 rounded-full inline-block shadow-lg" style="background-color: #E8A87C; border: 4px solid #D95550;">
                 <p class="text-6xl mb-0 leading-none">🦃</p>
             </div>
@@ -116,13 +112,11 @@
                     <canvas id="proteinChart"></canvas>
                 </div>
 
-                <!-- UPDATED CONCLUSION - Bolded, no divider, pushed up -->
                 <div class="text-center mt-2">
                     <strong class="text-body-muted">Prime Rib is the clear winner, securing 6 out of 13 first-place votes and the highest overall score! Lamb, Turkey, and Venison are in a tight race for second.</strong>
                 </div>
             </div>
 
-            <!-- Card 2 (SWAPPED): The Feast (Interactive Food Tabs) -->
             <div class="card">
                 <h2 class="text-2xl font-bold text-center mb-4 header-card">The Feast: Food & Drink</h2>
                 <p class="text-center text-body-muted mb-6">Toggle between categories to see the condensed plan.</p>
@@ -151,12 +145,10 @@
                 </div>
             </div>
 
-            <!-- NEW: Activity Section Header -->
             <div class="lg:col-span-2 mt-4">
                 <h2 class="text-3xl font-bold text-center mb-4 header-main">The Fun: Activity Planning</h2>
             </div>
 
-            <!-- Card 3 (Hike) - Updated Title -->
             <div class="card">
                 <h2 class="text-2xl font-bold text-center mb-4 header-card">Hike Participation</h2>
                 <p class="text-center text-body-muted mb-6">The late-morning hike has overwhelming support!</p>
@@ -165,20 +157,17 @@
                 </div>
             </div>
             
-            <!-- Card 4 (Movie) - Updated Title -->
             <div class="card">
                 <h2 class="text-2xl font-bold text-center mb-4 header-card">Movie Selection</h2>
                 <p class="text-center text-body-muted mb-6">Comedy is the clear favorite for the pre-dinner movie slot.</p>
                 <div class="chart-container-pie mb-4">
                     <canvas id="movieChart"></canvas>
                 </div>
-                <!-- Specific movie requests added here -->
                 <p class="text-sm italic text-center text-body-muted pt-2">Specific Requests: Die Hard, Top Gun, Adams Family Values, Black and white old Thanksgiving movies, Holiday Classic.</p>
             </div>
 
         </main>
         
-        <!-- Card 5 (Activities) - Updated Title -->
         <section class="card lg:col-span-2 mt-8">
             <h2 class="text-3xl font-bold text-center mb-6 header-card">Activities and Games</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-body-muted">
@@ -231,8 +220,8 @@
                 { name: "Good butter", type: "Side", status: "Confirmed", notes: "" },
                 { name: "Carrots", type: "Side", status: "Confirmed", notes: "" },
                 { name: "Vegetable side", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Taylor's dressing", type: "Side", status: "Requested", notes: "x3" }, // UPDATED: Removed (Requested)
-                { name: "Ken’s cajun rice dressing", type: "Side", status: "Requested", notes: "x3" }, // UPDATED: Removed (Requested)
+                { name: "Taylor's dressing", type: "Side", status: "Requested", notes: "x3" },
+                { name: "Ken’s cajun rice dressing", type: "Side", status: "Requested", notes: "x3" },
                 { name: "Donna’s Breakfast casserole", type: "Side", status: "Requested", notes: "" },
                 { name: "Granny red chili", type: "Side", status: "Requested", notes: "" },
                 { name: "Mulled Wine", type: "Beverage", status: "Confirmed", notes: "x3" },
@@ -259,7 +248,6 @@
                 { name: "Donna's chocolate mousse", type: "Dessert", status: "Requested", notes: "" }
             ];
             
-            // New Palette (redefined for clarity in JS)
             const palette = {
                 bg: '#FDFBF8',
                 text: '#40312E',
@@ -287,7 +275,6 @@
             };
 
             function initCharts() {
-                // 1. Protein Chart (Bar)
                 const proteinCtx = document.getElementById('proteinChart').getContext('2d');
                 new Chart(proteinCtx, {
                     type: 'bar',
@@ -320,7 +307,6 @@
                     }
                 });
 
-                // 2. Hike Chart (Donut)
                 const hikeCtx = document.getElementById('hikeChart').getContext('2d');
                 new Chart(hikeCtx, {
                     type: 'doughnut',
@@ -346,7 +332,6 @@
                     }
                 });
                 
-                // 3. Movie Chart (Pie)
                 const movieCtx = document.getElementById('movieChart').getContext('2d');
                 new Chart(movieCtx, {
                     type: 'pie',
@@ -372,8 +357,6 @@
                     }
                 });
             }
-            
-            // --- Food Planner Logic (UNITS 2 & 3) ---
 
             const foodTabButtons = document.querySelectorAll('.tab-btn');
             const foodTabContents = document.querySelectorAll('.food-tab-content');
@@ -413,7 +396,6 @@
             function renderFoodTabs() {
                 const types = ['Side', 'Beverage', 'Dessert'];
                 
-                // UPDATED FOOTER TEXT AND STYLING TO MATCH MOVIE CARD
                 const footerHtml = '<p class="text-sm italic text-center text-body-muted pt-2">* Details indicates the number of volunteers or requests.</p>';
 
                 types.forEach(type => {
