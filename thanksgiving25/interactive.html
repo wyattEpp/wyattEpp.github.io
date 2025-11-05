@@ -1,0 +1,473 @@
+<!-- Chosen Palette: Vibrant Rust & Autumn (Aesthetic Base) -->
+<!-- Application Structure Plan: The layout is now a 2x2 grid (Protein, Feast) followed by a full-width section header, then a second 2x2 grid (Hike, Movie), concluding with a full-width summary (Activities). This structure clearly separates Food planning from Fun planning. -->
+<!-- Color Scheme Update: The vibrant autumn theme (#D95550 Rust, #E8A87C Orange) is retained as accent colors against a clean white background. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All charts are Chart.js on Canvas. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Thanksgiving 2025: Interactive Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Restored Cleaner Off-white Background */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8; /* Cleaner Off-white */
+            color: #40312E; /* Deep Brown Text */
+        }
+        .chart-container-bar {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+        }
+        .chart-container-donut, .chart-container-pie {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Tab toggle buttons for the food card */
+        .tab-btn {
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background-color: #D95550; /* Rust Red */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tab-btn:not(.active) {
+            background-color: white;
+            color: #7A6C68; /* Muted Brown */
+            border: 1px solid #F2C49B; /* Light Peach */
+        }
+        .tab-btn:hover:not(.active) {
+            background-color: #FDFBF8;
+        }
+        
+        /* New Text Colors adjusted for light background */
+        .header-main { color: #40312E; } /* Main text is Deep Brown */
+        .header-sub { color: #D95550; } /* Sub-header is Rust Red */
+        .header-card { color: #D95550; } /* Card title is Rust Red */
+        .text-body-muted { color: #7A6C68; } /* Muted text inside cards */
+
+        /* Table styling */
+        .condensed-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .condensed-table th, .condensed-table td {
+            border-bottom: 1px solid #F2C49B; /* Light Peach border */
+            padding: 10px 8px;
+            text-align: left;
+        }
+        .condensed-table th {
+            background-color: #FDFBF8;
+            color: #7A6C68;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .condensed-table td:first-child {
+            font-weight: 600;
+            color: #40312E;
+        }
+        .condensed-table tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center my-8 md:my-12">
+            <!-- Large Turkey Image Replacement -->
+            <div class="mb-4 p-4 rounded-full inline-block shadow-lg" style="background-color: #E8A87C; border: 4px solid #D95550;">
+                <p class="text-6xl mb-0 leading-none">🦃</p>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-2 header-main">Family Thanksgiving 2025</h1>
+            <p class="text-xl md:text-2xl font-semibold header-sub">Planning Dashboard</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Card 1: Main Event (Protein) -->
+            <div class="card">
+                <h2 class="text-2xl font-bold text-center mb-4 header-card">The Main Event: Protein</h2>
+                <p class="text-center text-body-muted mb-4">The results are in! After weighting 8 ranks from 13 respondents (8 points for 1st choice, 1 for 8th), we have a clear winner!</p>
+                
+                <div class="chart-container-bar mb-4">
+                    <canvas id="proteinChart"></canvas>
+                </div>
+
+                <!-- UPDATED CONCLUSION - Bolded, no divider, pushed up -->
+                <div class="text-center mt-2">
+                    <strong class="text-body-muted">Prime Rib is the clear favorite, securing 6 out of 13 first-place votes and the highest overall score! Lamb, Turkey, and Venison are in a tight race for second.</strong>
+                </div>
+            </div>
+
+            <!-- Card 2 (SWAPPED): The Feast (Interactive Food Tabs) -->
+            <div class="card">
+                <h2 class="text-2xl font-bold text-center mb-4 header-card">The Feast: Food & Drink Planner</h2>
+                <p class="text-center text-body-muted mb-6">Toggle between categories to see the condensed plan.</p>
+                
+                <!-- Tab Toggle Buttons -->
+                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
+                    <button class="tab-btn font-semibold py-2 px-4 rounded-full active" data-tab="sides">Sides</button>
+                    <button class="tab-btn font-semibold py-2 px-4 rounded-full" data-tab="beverages">Beverages</button>
+                    <button class="tab-btn font-semibold py-2 px-4 rounded-full" data-tab="desserts">Desserts</button>
+                </div>
+
+                <!-- Tab Content Area -->
+                <div class="flex-grow">
+                    <!-- Sides Tab Content -->
+                    <div id="foodTab-sides" class="food-tab-content">
+                        <!-- JS will render table(s) here -->
+                    </div>
+                    <!-- Beverages Tab Content -->
+                    <div id="foodTab-beverages" class="food-tab-content hidden">
+                        <!-- JS will render table(s) here -->
+                    </div>
+                    <!-- Desserts Tab Content -->
+                    <div id="foodTab-desserts" class="food-tab-content hidden">
+                        <!-- JS will render table(s) here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: Activity Section Header -->
+            <div class="lg:col-span-2 mt-4">
+                <h2 class="text-3xl font-bold text-center mb-4 header-main">The Fun: Activity Planning</h2>
+            </div>
+
+            <!-- Card 3 (Hike) - Updated Title -->
+            <div class="card">
+                <h2 class="text-2xl font-bold text-center mb-4 header-card">Hike Participation</h2>
+                <p class="text-center text-body-muted mb-6">The late-morning hike has overwhelming support.</p>
+                <div class="chart-container-donut mt-auto">
+                    <canvas id="hikeChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Card 4 (Movie) - Updated Title -->
+            <div class="card">
+                <h2 class="text-2xl font-bold text-center mb-4 header-card">Movie Selection</h2>
+                <p class="text-center text-body-muted mb-6">Comedy is the clear favorite for the pre-dinner movie slot.</p>
+                <div class="chart-container-pie mb-4">
+                    <canvas id="movieChart"></canvas>
+                </div>
+                <!-- Specific movie requests added here -->
+                <p class="text-sm italic text-center text-body-muted pt-2">Specific Requests: Die Hard, Top Gun, Adams Family Values, Black and white old Thanksgiving movies, Holiday Classic.</p>
+            </div>
+
+        </main>
+        
+        <!-- Card 5 (Activities) - Updated Title -->
+        <section class="card lg:col-span-2 mt-8">
+            <h2 class="text-3xl font-bold text-center mb-6 header-card">Activities and Games</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-body-muted">
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-3 header-main border-b pb-2" style="border-color: #F2C49B;">🎯 Top Activities</h3>
+                    <ul class="list-disc list-inside space-y-1 pl-4">
+                        <li class="font-semibold text-base" style="color: #40312E;">Drinking (4 mentions)</li>
+                        <li class="font-semibold text-base" style="color: #40312E;">Watching Football (3 mentions)</li>
+                        <li>Napping</li>
+                        <li>Getting "turnt" and playing boardgames</li>
+                        <li>Karaoke games</li>
+                        <li>Bitching (as a group)</li>
+                        <li>Walks</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-3 header-main border-b pb-2" style="border-color: #F2C49B;">🎲 Most Requested Games</h3>
+                    <div class="flex items-center space-x-4 mb-3">
+                        <span class="text-4xl text-yellow-500">🗣️</span>
+                        <span class="text-xl font-bold" style="color: #D95550;">Catch Phrase (5 Mentions)</span>
+                    </div>
+                    <div class="flex items-center space-x-4 mb-3">
+                        <span class="text-4xl text-red-500">🃏</span>
+                        <span class="text-xl font-bold" style="color: #D95550;">Uno (5 Mentions)</span>
+                    </div>
+                    <p class="text-sm italic pt-2">Other Suggestions: Billiards, Euchre, Jackbox, Clue, Hearts, Crossword Puzzles, Canasta, Sorry, and Beer Pong.</p>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const allFoodData = [
+                { name: "Green bean casserole", type: "Side", status: "Confirmed", notes: "x2" },
+                { name: "Corn casserole", type: "Side", status: "Confirmed", notes: "x2" },
+                { name: "Taylor's dressing", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Deviled eggs", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Mashed potatoes", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Macaroni and cheese", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Ken’s cajun rice dressing", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Broccoli salad", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Butternut squash risotto", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Bread/rolls", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Good butter", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Carrots", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Vegetable side", type: "Side", status: "Confirmed", notes: "" },
+                { name: "Taylor's dressing", type: "Side", status: "Requested", notes: "x3" }, // UPDATED: Removed (Requested)
+                { name: "Ken’s cajun rice dressing", type: "Side", status: "Requested", notes: "x3" }, // UPDATED: Removed (Requested)
+                { name: "Donna’s Breakfast casserole", type: "Side", status: "Requested", notes: "" },
+                { name: "Granny red chili", type: "Side", status: "Requested", notes: "" },
+                { name: "Mulled Wine", type: "Beverage", status: "Confirmed", notes: "x3" },
+                { name: "Mimosa", type: "Beverage", status: "Confirmed", notes: "x2" },
+                { name: "White wine", type: "Beverage", status: "Confirmed", notes: "x2" },
+                { name: "Scotch", type: "Beverage", status: "Confirmed", notes: "" },
+                { name: "Hot tea/Hotty Toddy", type: "Beverage", status: "Confirmed", notes: "" },
+                { name: "Cab Sav (Austin Hope)", type: "Beverage", status: "Confirmed", notes: "" },
+                { name: "Ginger ale", type: "Beverage", status: "Confirmed", notes: "" },
+                { name: "Baileys/Irish cream", type: "Beverage", status: "Confirmed", notes: "" },
+                { name: "Colt 45 and 4lokos", type: "Beverage", status: "Confirmed", notes: "" },
+                { name: "Beer", type: "Beverage", status: "Confirmed", notes: "" },
+                { name: "Bloody Mary", type: "Beverage", status: "Confirmed", notes: "" },
+                { name: "Asheville beers", type: "Beverage", status: "Confirmed", notes: "" },
+                { name: "More Miller Lite", type: "Beverage", status: "Requested", notes: "" },
+                { name: "Good N/A beer for Taylor", type: "Beverage", status: "Requested", notes: "" },
+                { name: "Moonshine", type: "Beverage", status: "Requested", notes: "" },
+                { name: "Pumpkin pie", type: "Dessert", status: "Confirmed", notes: "" },
+                { name: "Cookies and cream dessert", type: "Dessert", status: "Confirmed", notes: "" },
+                { name: "Raspberry bunt cake", type: "Dessert", status: "Confirmed", notes: "" },
+                { name: "German Chocolate cake", type: "Dessert", status: "Confirmed", notes: "" },
+                { name: "Pie", type: "Dessert", status: "Confirmed", notes: "" },
+                { name: "Anything with chocolate", type: "Dessert", status: "Requested", notes: "" },
+                { name: "Donna's chocolate mousse", type: "Dessert", status: "Requested", notes: "" }
+            ];
+            
+            // New Palette (redefined for clarity in JS)
+            const palette = {
+                bg: '#FDFBF8',
+                text: '#40312E',
+                textMuted: '#7A6C68',
+                accent1: '#D95550', // Rust Red
+                accent2: '#E8A87C', // Orange
+                accent3: '#F2C49B'  // Light Peach
+            };
+
+            const mandatoryTooltipCallback = {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                    return label.join(' ');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            };
+
+            function initCharts() {
+                // 1. Protein Chart (Bar)
+                const proteinCtx = document.getElementById('proteinChart').getContext('2d');
+                new Chart(proteinCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Prime Rib', 'Lamb', 'Turkey', 'Venison', 'Ham', 'Goose', 'Duck', 'Pork Roast'],
+                        datasets: [{
+                            label: 'Weighted Score',
+                            data: [88, 66, 63, 61, 52, 34, 32, 31],
+                            backgroundColor: [
+                                palette.accent1, palette.accent2, palette.accent3, palette.textMuted,
+                                palette.accent1, palette.accent2, palette.accent3, palette.textMuted
+                            ],
+                            borderWidth: 1,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        ...mandatoryTooltipCallback,
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        indexAxis: 'y',
+                        scales: { 
+                            x: { title: { display: true, text: 'Weighted Score (Max 104)' }, ticks: { color: palette.textMuted } },
+                            y: { ticks: { color: palette.text } }
+                        },
+                        plugins: {
+                            ...mandatoryTooltipCallback.plugins,
+                            legend: { display: false }
+                        }
+                    }
+                });
+
+                // 2. Hike Chart (Donut)
+                const hikeCtx = document.getElementById('hikeChart').getContext('2d');
+                new Chart(hikeCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Yes (12)', 'No (1)'],
+                        datasets: [{
+                            data: [12, 1],
+                            backgroundColor: [palette.accent1, palette.accent3],
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        ...mandatoryTooltipCallback,
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        plugins: {
+                            ...mandatoryTooltipCallback.plugins,
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: palette.text } 
+                            }
+                        }
+                    }
+                });
+                
+                // 3. Movie Chart (Pie)
+                const movieCtx = document.getElementById('movieChart').getContext('2d');
+                new Chart(movieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Comedy (7)', 'Action/Drama (4)', 'Other (2)'],
+                        datasets: [{
+                            data: [7, 4, 2],
+                            backgroundColor: [palette.accent1, palette.accent2, palette.textMuted],
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        ...mandatoryTooltipCallback,
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        plugins: {
+                            ...mandatoryTooltipCallback.plugins,
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: palette.text } 
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // --- Food Planner Logic (UNITS 2 & 3) ---
+
+            const foodTabButtons = document.querySelectorAll('.tab-btn');
+            const foodTabContents = document.querySelectorAll('.food-tab-content');
+
+            function buildTableHtml(items, title, status) {
+                if (items.length === 0) return '';
+                
+                const statusColor = status === 'Confirmed' ? 'text-green-700' : 'text-yellow-700';
+                let tableHtml = `
+                    <h4 class="text-lg font-semibold mt-4 mb-2 ${statusColor}">
+                        ${title} (${items.length} items)
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="condensed-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                items.forEach(item => {
+                    tableHtml += `
+                        <tr>
+                            <td class="py-2 px-3 text-sm">${item.name}</td>
+                            <td class="py-2 px-3 text-sm text-body-muted">${item.notes || '---'}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHtml += `</tbody></table></div>`;
+                return tableHtml;
+            }
+
+            function renderFoodTabs() {
+                const types = ['Side', 'Beverage', 'Dessert'];
+                
+                // UPDATED FOOTER TEXT AND STYLING TO MATCH MOVIE CARD
+                const footerHtml = '<p class="text-sm italic text-center text-body-muted pt-2">* Details indicates the number of volunteers or requests.</p>';
+
+                types.forEach(type => {
+                    const typeLC = type.toLowerCase() + 's'; // e.g., "sides"
+                    const container = document.getElementById(`foodTab-${typeLC}`);
+                    if (!container) return;
+
+                    const confirmedItems = allFoodData.filter(item => item.type === type && item.status === 'Confirmed');
+                    const requestedItems = allFoodData.filter(item => item.type === type && item.status === 'Requested');
+
+                    let contentHtml = buildTableHtml(confirmedItems, 'Confirmed', 'Confirmed');
+                    contentHtml += buildTableHtml(requestedItems, 'Requested', 'Requested');
+                    
+                    if (contentHtml !== '') {
+                        contentHtml += footerHtml; // Append footer only if content exists
+                    } else {
+                        contentHtml = '<p class="text-body-muted italic text-center">No items in this category.</p>';
+                    }
+                    
+                    container.innerHTML = contentHtml;
+                });
+            }
+
+            function showFoodTab(tabName) {
+                foodTabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                foodTabButtons.forEach(button => {
+                    button.classList.remove('active');
+                });
+
+                document.getElementById(`foodTab-${tabName}`).classList.remove('hidden');
+                document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+            }
+
+            function initFoodPlanner() {
+                renderFoodTabs(); // Pre-render all tables
+                
+                foodTabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const tabName = button.dataset.tab;
+                        showFoodTab(tabName);
+                    });
+                });
+                
+                showFoodTab('sides'); // Show 'Sides' by default
+            }
+
+            // --- End Food Planner Logic ---
+            
+            // Initialize all components
+            initCharts();
+            initFoodPlanner();
+        });
+    </script>
+</body>
+</html>
