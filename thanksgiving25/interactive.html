@@ -1,6 +1,3 @@
-<!-- Chosen Palette: Vibrant Rust & Autumn (Aesthetic Base) -->
-<!-- Application Structure Plan: The layout is now a 2x2 grid (Protein, Feast) followed by a full-width section header, then a second 2x2 grid (Hike, Movie), concluding with a full-width summary (Activities). This structure clearly separates Food planning from Fun planning. -->
-<!-- Color Scheme Update: The vibrant autumn theme (#D95550 Rust, #E8A87C Orange) is retained as accent colors against a clean white background. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,19 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #FDFBF8; /* Cleaner Off-white */
             color: #40312E; /* Deep Brown Text */
-        }
-        .chart-container-bar {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px; 
         }
         .chart-container-donut, .chart-container-pie {
             position: relative;
@@ -40,52 +30,47 @@
             display: flex;
             flex-direction: column;
         }
-        /* Tab toggle buttons for the food card */
-        .tab-btn {
-            transition: all 0.2s ease;
-        }
-        .tab-btn.active {
-            background-color: #D95550; /* Rust Red */
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .tab-btn:not(.active) {
-            background-color: white;
-            color: #7A6C68; /* Muted Brown */
-            border: 1px solid #F2C49B; /* Light Peach */
-        }
-        .tab-btn:hover:not(.active) {
-            background-color: #FDFBF8;
-        }
         
-        .header-main { color: #40312E; } /* Main text is Deep Brown */
-        .header-sub { color: #D95550; } /* Sub-header is Rust Red */
-        .header-card { color: #D95550; } /* Card title is Rust Red */
-        .text-body-muted { color: #7A6C68; } /* Muted text inside cards */
+        .header-main { color: #40312E; } 
+        .header-sub { color: #D95550; } 
+        .header-card { color: #D95550; } 
+        .text-body-muted { color: #7A6C68; } 
 
-        /* Table styling */
-        .condensed-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .condensed-table th, .condensed-table td {
-            border-bottom: 1px solid #F2C49B; /* Light Peach border */
-            padding: 10px 8px;
-            text-align: left;
-        }
-        .condensed-table th {
+        /* Assignment specific styles */
+        .person-tag {
             background-color: #FDFBF8;
+            border: 1px solid #F2C49B;
             color: #7A6C68;
+            padding: 2px 8px;
+            border-radius: 999px;
             font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .condensed-table td:first-child {
             font-weight: 600;
-            color: #40312E;
         }
-        .condensed-table tr:last-child td {
-            border-bottom: none;
+        .category-header {
+            color: #D95550;
+            border-bottom: 2px solid #F2C49B;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .item-row:last-child { border-bottom: none; }
+        
+        /* Personalized Card Styles */
+        .my-ticket-card {
+            background: linear-gradient(135deg, #D95550 0%, #E8A87C 100%);
+            color: white;
         }
     </style>
 </head>
@@ -101,54 +86,53 @@
             <p class="text-xl md:text-2xl font-semibold header-sub">Planning Dashboard</p>
         </header>
 
+        <!-- NEW: Assignment Section (Replaces previous Grid Row 1) -->
+        <section class="mb-12">
+            
+            <!-- Controls -->
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white p-4 rounded-lg shadow-sm border border-orange-100">
+                <div class="mb-4 md:mb-0">
+                    <h2 class="text-xl font-bold header-main">🍽️ The Menu Assignments</h2>
+                    <p class="text-sm text-body-muted">Finalized list based on survey results.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <label for="personSelect" class="font-semibold text-sm text-orange-800">Who are you?</label>
+                    <select id="personSelect" class="bg-orange-50 border border-orange-200 text-orange-900 text-base rounded-lg focus:ring-orange-500 focus:border-orange-500 block p-2.5">
+                        <option value="all">👀 View Everyone</option>
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left Col: Personalized View (Dynamic) -->
+                <div class="lg:col-span-1">
+                    <div id="personalCard" class="card border-2 border-orange-100 h-full">
+                        <!-- Content injected by JS based on selection -->
+                        <div class="text-center p-8 text-body-muted">
+                            <i data-lucide="users" class="w-12 h-12 mx-auto mb-4 opacity-50"></i>
+                            <h3 class="text-lg font-semibold">Viewing All Assignments</h3>
+                            <p class="text-sm mt-2">Select your name in the top right dropdown to see your personal shopping list!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Col: The Master List -->
+                <div class="lg:col-span-2 card">
+                    <div id="masterMenuContainer">
+                        <!-- Content injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Fun: Activity Planning (Original Grid Row 2) -->
+        <div class="lg:col-span-2 mt-4">
+            <h2 class="text-3xl font-bold text-center mb-8 header-main">The Fun: Activity Planning</h2>
+        </div>
+
         <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-            <!-- Card 1: Main Event (Protein) -->
-            <div class="card">
-                <h2 class="text-2xl font-bold text-center mb-4 header-card">The Main Event: Protein</h2>
-                <p class="text-center text-body-muted mb-4">The results are in! To find our favorites, proteins were ranked and given a weighted score by all 13 respondants (8 points for 1st choice, 1 for 8th).</p>
-                
-                <div class="chart-container-bar mb-4">
-                    <canvas id="proteinChart"></canvas>
-                </div>
-
-                <div class="text-center mt-2">
-                    <strong class="text-body-muted">Prime Rib is the clear winner, securing 6 out of 13 first-place votes and the highest overall score! Lamb, Turkey, and Venison are in a tight race for second.</strong>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2 class="text-2xl font-bold text-center mb-4 header-card">The Feast: Food & Drink</h2>
-                <p class="text-center text-body-muted mb-6">Toggle between categories to see the condensed plan.</p>
-                
-                <!-- Tab Toggle Buttons -->
-                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
-                    <button class="tab-btn font-semibold py-2 px-4 rounded-full active" data-tab="sides">Sides</button>
-                    <button class="tab-btn font-semibold py-2 px-4 rounded-full" data-tab="beverages">Beverages</button>
-                    <button class="tab-btn font-semibold py-2 px-4 rounded-full" data-tab="desserts">Desserts</button>
-                </div>
-
-                <!-- Tab Content Area -->
-                <div class="flex-grow">
-                    <!-- Sides Tab Content -->
-                    <div id="foodTab-sides" class="food-tab-content">
-                        <!-- JS will render table(s) here -->
-                    </div>
-                    <!-- Beverages Tab Content -->
-                    <div id="foodTab-beverages" class="food-tab-content hidden">
-                        <!-- JS will render table(s) here -->
-                    </div>
-                    <!-- Desserts Tab Content -->
-                    <div id="foodTab-desserts" class="food-tab-content hidden">
-                        <!-- JS will render table(s) here -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-2 mt-4">
-                <h2 class="text-3xl font-bold text-center mb-4 header-main">The Fun: Activity Planning</h2>
-            </div>
-
             <div class="card">
                 <h2 class="text-2xl font-bold text-center mb-4 header-card">Hike Participation</h2>
                 <p class="text-center text-body-muted mb-6">The late-morning hike has overwhelming support!</p>
@@ -163,15 +147,13 @@
                 <div class="chart-container-pie mb-4">
                     <canvas id="movieChart"></canvas>
                 </div>
-                <p class="text-sm italic text-center text-body-muted pt-2">Specific Requests: Die Hard, Top Gun, Adams Family Values, Black and white old Thanksgiving movies, Holiday Classic.</p>
+                <p class="text-sm italic text-center text-body-muted pt-2">Specific Requests: Die Hard, Top Gun, Adams Family Values, Holiday Classic.</p>
             </div>
-
         </main>
         
         <section class="card lg:col-span-2 mt-8">
             <h2 class="text-3xl font-bold text-center mb-6 header-card">Activities and Games</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-body-muted">
-                
                 <div>
                     <h3 class="text-xl font-semibold mb-3 header-main border-b pb-2" style="border-color: #F2C49B;">🎯 Top Activities</h3>
                     <ul class="list-disc list-inside space-y-1 pl-4">
@@ -179,12 +161,9 @@
                         <li class="font-semibold text-base" style="color: #40312E;">Watching Football (3 mentions)</li>
                         <li>Napping</li>
                         <li>Getting "turnt" and playing boardgames</li>
-                        <li>Karaoke games</li>
-                        <li>Bitching (as a group)</li>
                         <li>Walks</li>
                     </ul>
                 </div>
-
                 <div>
                     <h3 class="text-xl font-semibold mb-3 header-main border-b pb-2" style="border-color: #F2C49B;">🎲 Most Requested Games</h3>
                     <div class="flex items-center space-x-4 mb-3">
@@ -195,66 +174,208 @@
                         <span class="text-4xl text-red-500">🃏</span>
                         <span class="text-xl font-bold" style="color: #D95550;">Uno (5 Mentions)</span>
                     </div>
-                    <p class="text-sm italic pt-2">Other Suggestions: Billiards, Euchre, Jackbox, Clue, Hearts, Crossword Puzzles, Canasta, Sorry, and Beer Pong.</p>
                 </div>
-
             </div>
         </section>
 
     </div>
 
     <script>
+        // Initialize Icons
+        lucide.createIcons();
+
         document.addEventListener('DOMContentLoaded', () => {
 
-            const allFoodData = [
-                { name: "Green bean casserole", type: "Side", status: "Confirmed", notes: "x2" },
-                { name: "Corn casserole", type: "Side", status: "Confirmed", notes: "x2" },
-                { name: "Taylor's dressing", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Deviled eggs", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Mashed potatoes", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Macaroni and cheese", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Ken’s cajun rice dressing", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Broccoli salad", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Butternut squash risotto", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Bread/rolls", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Good butter", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Carrots", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Vegetable side", type: "Side", status: "Confirmed", notes: "" },
-                { name: "Taylor's dressing", type: "Side", status: "Requested", notes: "x3" },
-                { name: "Ken’s cajun rice dressing", type: "Side", status: "Requested", notes: "x3" },
-                { name: "Donna’s Breakfast casserole", type: "Side", status: "Requested", notes: "" },
-                { name: "Granny red chili", type: "Side", status: "Requested", notes: "" },
-                { name: "Mulled Wine", type: "Beverage", status: "Confirmed", notes: "x3" },
-                { name: "Mimosa", type: "Beverage", status: "Confirmed", notes: "x2" },
-                { name: "White wine", type: "Beverage", status: "Confirmed", notes: "x2" },
-                { name: "Scotch", type: "Beverage", status: "Confirmed", notes: "" },
-                { name: "Hot tea/Hotty Toddy", type: "Beverage", status: "Confirmed", notes: "" },
-                { name: "Cab Sav (Austin Hope)", type: "Beverage", status: "Confirmed", notes: "" },
-                { name: "Ginger ale", type: "Beverage", status: "Confirmed", notes: "" },
-                { name: "Baileys/Irish cream", type: "Beverage", status: "Confirmed", notes: "" },
-                { name: "Colt 45 and 4lokos", type: "Beverage", status: "Confirmed", notes: "" },
-                { name: "Beer", type: "Beverage", status: "Confirmed", notes: "" },
-                { name: "Bloody Mary", type: "Beverage", status: "Confirmed", notes: "" },
-                { name: "Asheville beers", type: "Beverage", status: "Confirmed", notes: "" },
-                { name: "More Miller Lite", type: "Beverage", status: "Requested", notes: "" },
-                { name: "Good N/A beer for Taylor", type: "Beverage", status: "Requested", notes: "" },
-                { name: "Moonshine", type: "Beverage", status: "Requested", notes: "" },
-                { name: "Pumpkin pie", type: "Dessert", status: "Confirmed", notes: "" },
-                { name: "Cookies and cream dessert", type: "Dessert", status: "Confirmed", notes: "" },
-                { name: "Raspberry bunt cake", type: "Dessert", status: "Confirmed", notes: "" },
-                { name: "German Chocolate cake", type: "Dessert", status: "Confirmed", notes: "" },
-                { name: "Pie", type: "Dessert", status: "Confirmed", notes: "" },
-                { name: "Anything with chocolate", type: "Dessert", status: "Requested", notes: "" },
-                { name: "Donna's chocolate mousse", type: "Dessert", status: "Requested", notes: "" }
+            // --- 1. DATA SECTION --- 
+            // UPDATED WITH SPREADSHEET DATA
+            const finalAssignments = [
+                { item: "Prime Rib", category: "Protein", person: "Wyatt", notes: "" },
+                { item: "Au jus", category: "Condiment", person: "Wyatt", notes: "" },
+                { item: "Horseradish Dill Sauce", category: "Condiment", person: "Wyatt", notes: "" },
+                { item: "Fried Turkey", category: "Protein", person: "Connor/Sean", notes: "" },
+                { item: "Gravy (Fresh Market)", category: "Condiment", person: "Donna", notes: "" },
+                { item: "Cranberry Sauce", category: "Condiment", person: "Kristen", notes: "" },
+                { item: "Venison Tenderloin", category: "Protein", person: "Sean/Dortha", notes: "" },
+                { item: "Pomegranate Pecan Salad", category: "Side", person: "Donna", notes: "" },
+                { item: "Green Bean Casserole", category: "Side", person: "Wyatt", notes: "" },
+                { item: "Candied Carrots", category: "Side", person: "Pierce", notes: "" },
+                { item: "Broccoli Salad", category: "Side", person: "Ruth", notes: "" },
+                { item: "Corn Casserole", category: "Side", person: "Donna", notes: "" },
+                { item: "Cajun Oyster Rice Dressing", category: "Side", person: "Ken", notes: "" },
+                { item: "Macaroni and Cheese", category: "Side", person: "Donna", notes: "" },
+                { item: "Taylor's Stuffing", category: "Side", person: "Taylor", notes: "" },
+                { item: "Bread/Rolls", category: "Side", person: "Pierce", notes: "" },
+                { item: "Deviled Eggs", category: "Side", person: "Donna", notes: "" },
+                { item: "Butternut Squash Risotto", category: "Side", person: "Kristen", notes: "" },
+                { item: "Good Butter", category: "Condiment", person: "Danny", notes: "" },
+                { item: "Pumpkin Pie", category: "Dessert", person: "Granny", notes: "" },
+                { item: "Edgar's Cake", category: "Dessert", person: "Granny", notes: "" },
+                { item: "German Chocolate Cake", category: "Dessert", person: "Dortha", notes: "" },
+                { item: "Cabernet Sauvignon", category: "Beverage", person: "Granny", notes: "" },
+                { item: "Zinfandel", category: "Beverage", person: "Garrett", notes: "" },
+                { item: "Pinot Noir", category: "Beverage", person: "Garrett", notes: "" },
+                { item: "Bailey's", category: "Beverage", person: "Danny", notes: "" },
+                { item: "Ginger Ale", category: "Beverage", person: "Danny", notes: "" },
+                { item: "Miller Lite", category: "Beverage", person: "Sean", notes: "" },
+                { item: "N/A Beer", category: "Beverage", person: "Taylor", notes: "" },
+                { item: "Mimosa", category: "Beverage", person: "Jack", notes: "" },
+                { item: "Hot Toddy", category: "Beverage", person: "Pierce", notes: "" },
+                { item: "Beer", category: "Beverage", person: "Jack", notes: "" },
+                { item: "Mulled Wine", category: "Beverage", person: "Wyatt", notes: "" },
+                { item: "White Wine", category: "Beverage", person: "Dortha/Ken", notes: "" },
+                { item: "Asheville Local Beers", category: "Beverage", person: "Kristen", notes: "" }
             ];
+
+            // Extract unique people (splitting shared responsibilities like "Sean/Dortha")
+            const allNames = finalAssignments
+                .flatMap(a => a.person.split('/').map(p => p.trim())) // Split by slash and trim whitespace
+                .filter(p => p !== "Unassigned");
             
+            const people = [...new Set(allNames)].sort();
+            
+            const select = document.getElementById('personSelect');
+            
+            // Populate Dropdown
+            people.forEach(person => {
+                const option = document.createElement('option');
+                option.value = person;
+                option.textContent = person;
+                select.appendChild(option);
+            });
+
+            // Helper to check if a person is part of an assignment string
+            const checkresponsibility = (assignmentPerson, selectedPerson) => {
+                if (!selectedPerson) return false;
+                const assignedPeople = assignmentPerson.split('/').map(p => p.trim());
+                return assignedPeople.includes(selectedPerson);
+            };
+
+            // --- 2. RENDER FUNCTIONS ---
+
+            const personalCard = document.getElementById('personalCard');
+            const masterContainer = document.getElementById('masterMenuContainer');
+
+            function renderMasterList(highlightPerson = null) {
+                // Categories updated to match sheet
+                const categories = ["Protein", "Side", "Condiment", "Beverage", "Dessert"];
+                let html = '';
+
+                categories.forEach(cat => {
+                    const items = finalAssignments.filter(i => i.category === cat);
+                    if (items.length === 0) return;
+
+                    html += `<div class="category-header">
+                                <i data-lucide="${getCategoryIcon(cat)}" class="w-5 h-5"></i> ${cat}s
+                             </div>`;
+                    
+                    html += `<div class="pl-2">`;
+                    items.forEach(item => {
+                        const isMine = checkresponsibility(item.person, highlightPerson);
+                        const rowClass = isMine ? "bg-orange-50 -mx-2 px-2 rounded-md border-l-4 border-orange-500" : "";
+                        const textClass = isMine ? "text-orange-900 font-semibold" : "text-slate-700";
+                        
+                        html += `
+                            <div class="item-row ${rowClass}">
+                                <div>
+                                    <div class="${textClass}">${item.item}</div>
+                                    ${item.notes ? `<div class="text-xs text-slate-400">${item.notes}</div>` : ''}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="person-tag ${isMine ? 'bg-orange-200 text-orange-800 border-orange-300' : ''}">
+                                        ${item.person}
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                });
+
+                masterContainer.innerHTML = html;
+                lucide.createIcons();
+            }
+
+            function renderPersonalCard(person) {
+                if (person === 'all') {
+                    personalCard.className = "card border-2 border-orange-100 h-full bg-white text-slate-800";
+                    personalCard.innerHTML = `
+                        <div class="text-center p-8 text-body-muted flex flex-col items-center justify-center h-full">
+                            <div class="bg-orange-100 p-4 rounded-full mb-4">
+                                <i data-lucide="users" class="w-8 h-8 text-orange-500"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-orange-900">Who is responsible?</h3>
+                            <p class="text-sm mt-2 max-w-xs mx-auto">Select a family member from the dropdown above to highlight their specific responsibilities.</p>
+                        </div>
+                    `;
+                } else {
+                    // Filter items where the selected person is included in the assignment string
+                    const myItems = finalAssignments.filter(a => checkresponsibility(a.person, person));
+                    
+                    personalCard.className = "card h-full my-ticket-card shadow-xl transform transition-all duration-300";
+                    
+                    let listHtml = '';
+                    if (myItems.length > 0) {
+                        listHtml = `<ul class="space-y-3 mt-6">`;
+                        myItems.forEach(item => {
+                            listHtml += `
+                                <li class="flex items-start gap-3 bg-white/10 p-2 rounded-lg backdrop-blur-sm border border-white/20">
+                                    <i data-lucide="check-circle" class="w-5 h-5 mt-0.5 flex-shrink-0 text-orange-200"></i>
+                                    <div>
+                                        <span class="font-bold text-lg block leading-tight">${item.item}</span>
+                                        <span class="text-sm text-orange-100 uppercase tracking-wide text-xs">${item.category}</span>
+                                        ${item.notes ? `<div class="text-xs text-white/70 mt-1 italic">"${item.notes}"</div>` : ''}
+                                        ${item.person.includes('/') ? `<div class="text-xs text-orange-200 font-semibold mt-1">Shared with: ${item.person}</div>` : ''}
+                                    </div>
+                                </li>`;
+                        });
+                        listHtml += `</ul>`;
+                    } else {
+                        listHtml = `<div class="text-center mt-8 p-4 bg-white/20 rounded-lg">Lucky you! Nothing assigned yet.</div>`;
+                    }
+
+                    personalCard.innerHTML = `
+                        <div class="text-center border-b border-white/20 pb-4">
+                            <p class="uppercase tracking-widest text-xs font-bold text-orange-100 mb-1">Assignment For</p>
+                            <h2 class="text-3xl font-bold text-white">${person}</h2>
+                            <div class="mt-2 inline-block bg-white/20 px-3 py-1 rounded-full text-sm font-medium border border-white/30">
+                                ${myItems.length} Items to Bring
+                            </div>
+                        </div>
+                        ${listHtml}
+                        <div class="mt-auto pt-6 text-center">
+                             <p class="text-xs text-white/60 italic">Thanks for helping!</p>
+                        </div>
+                    `;
+                }
+                lucide.createIcons();
+            }
+
+            function getCategoryIcon(cat) {
+                switch(cat) {
+                    case 'Protein': return 'drumstick';
+                    case 'Side': return 'utensils';
+                    case 'Condiment': return 'utensils-crossed';
+                    case 'Beverage': return 'wine'; 
+                    case 'Dessert': return 'cake-slice';
+                    default: return 'circle';
+                }
+            }
+
+            // Event Listener
+            select.addEventListener('change', (e) => {
+                const val = e.target.value;
+                renderPersonalCard(val);
+                renderMasterList(val === 'all' ? null : val);
+            });
+
+            // Initial Render
+            renderPersonalCard('all');
+            renderMasterList();
+
+            // --- 3. CHARTS (Original Logic) ---
             const palette = {
-                bg: '#FDFBF8',
-                text: '#40312E',
-                textMuted: '#7A6C68',
-                accent1: '#D95550', // Rust Red
-                accent2: '#E8A87C', // Orange
-                accent3: '#F2C49B'  // Light Peach
+                bg: '#FDFBF8', text: '#40312E', textMuted: '#7A6C68',
+                accent1: '#D95550', accent2: '#E8A87C', accent3: '#F2C49B'
             };
 
             const mandatoryTooltipCallback = {
@@ -264,9 +385,7 @@
                             title: function(tooltipItems) {
                                 const item = tooltipItems[0];
                                 let label = item.chart.data.labels[item.dataIndex];
-                                if (Array.isArray(label)) {
-                                    return label.join(' ');
-                                }
+                                if (Array.isArray(label)) return label.join(' ');
                                 return label;
                             }
                         }
@@ -275,38 +394,6 @@
             };
 
             function initCharts() {
-                const proteinCtx = document.getElementById('proteinChart').getContext('2d');
-                new Chart(proteinCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Prime Rib', 'Lamb', 'Turkey', 'Venison', 'Ham', 'Goose', 'Duck', 'Pork Roast'],
-                        datasets: [{
-                            label: 'Weighted Score',
-                            data: [88, 66, 63, 61, 52, 34, 32, 31],
-                            backgroundColor: [
-                                palette.accent1, palette.accent2, palette.accent3, palette.textMuted,
-                                palette.accent1, palette.accent2, palette.accent3, palette.textMuted
-                            ],
-                            borderWidth: 1,
-                            borderColor: '#fff'
-                        }]
-                    },
-                    options: {
-                        ...mandatoryTooltipCallback,
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        indexAxis: 'y',
-                        scales: { 
-                            x: { title: { display: true, text: 'Weighted Score (Max 104)' }, ticks: { color: palette.textMuted } },
-                            y: { ticks: { color: palette.text } }
-                        },
-                        plugins: {
-                            ...mandatoryTooltipCallback.plugins,
-                            legend: { display: false }
-                        }
-                    }
-                });
-
                 const hikeCtx = document.getElementById('hikeChart').getContext('2d');
                 new Chart(hikeCtx, {
                     type: 'doughnut',
@@ -315,7 +402,8 @@
                         datasets: [{
                             data: [12, 1],
                             backgroundColor: [palette.accent1, palette.accent3],
-                            hoverOffset: 4
+                            hoverOffset: 4,
+                            borderWidth: 0
                         }]
                     },
                     options: {
@@ -324,10 +412,7 @@
                         responsive: true,
                         plugins: {
                             ...mandatoryTooltipCallback.plugins,
-                            legend: { 
-                                position: 'bottom',
-                                labels: { color: palette.text } 
-                            }
+                            legend: { position: 'bottom', labels: { color: palette.text } }
                         }
                     }
                 });
@@ -340,7 +425,8 @@
                         datasets: [{
                             data: [7, 4, 2],
                             backgroundColor: [palette.accent1, palette.accent2, palette.textMuted],
-                            hoverOffset: 4
+                            hoverOffset: 4,
+                            borderWidth: 0
                         }]
                     },
                     options: {
@@ -349,106 +435,13 @@
                         responsive: true,
                         plugins: {
                             ...mandatoryTooltipCallback.plugins,
-                            legend: { 
-                                position: 'bottom',
-                                labels: { color: palette.text } 
-                            }
+                            legend: { position: 'bottom', labels: { color: palette.text } }
                         }
                     }
                 });
             }
 
-            const foodTabButtons = document.querySelectorAll('.tab-btn');
-            const foodTabContents = document.querySelectorAll('.food-tab-content');
-
-            function buildTableHtml(items, title, status) {
-                if (items.length === 0) return '';
-                
-                const statusColor = status === 'Confirmed' ? 'text-green-700' : 'text-yellow-700';
-                let tableHtml = `
-                    <h4 class="text-lg font-semibold mt-4 mb-2 ${statusColor}">
-                        ${title} (${items.length} items)
-                    </h4>
-                    <div class="overflow-x-auto">
-                        <table class="condensed-table">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Details</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-                
-                items.forEach(item => {
-                    tableHtml += `
-                        <tr>
-                            <td class="py-2 px-3 text-sm">${item.name}</td>
-                            <td class="py-2 px-3 text-sm text-body-muted">${item.notes || '---'}</td>
-                        </tr>
-                    `;
-                });
-
-                tableHtml += `</tbody></table></div>`;
-                return tableHtml;
-            }
-
-            function renderFoodTabs() {
-                const types = ['Side', 'Beverage', 'Dessert'];
-                
-                const footerHtml = '<p class="text-sm italic text-center text-body-muted pt-2">* Details indicates the number of volunteers or requests.</p>';
-
-                types.forEach(type => {
-                    const typeLC = type.toLowerCase() + 's'; // e.g., "sides"
-                    const container = document.getElementById(`foodTab-${typeLC}`);
-                    if (!container) return;
-
-                    const confirmedItems = allFoodData.filter(item => item.type === type && item.status === 'Confirmed');
-                    const requestedItems = allFoodData.filter(item => item.type === type && item.status === 'Requested');
-
-                    let contentHtml = buildTableHtml(confirmedItems, 'Confirmed', 'Confirmed');
-                    contentHtml += buildTableHtml(requestedItems, 'Requested', 'Requested');
-                    
-                    if (contentHtml !== '') {
-                        contentHtml += footerHtml; // Append footer only if content exists
-                    } else {
-                        contentHtml = '<p class="text-body-muted italic text-center">No items in this category.</p>';
-                    }
-                    
-                    container.innerHTML = contentHtml;
-                });
-            }
-
-            function showFoodTab(tabName) {
-                foodTabContents.forEach(content => {
-                    content.classList.add('hidden');
-                });
-                foodTabButtons.forEach(button => {
-                    button.classList.remove('active');
-                });
-
-                document.getElementById(`foodTab-${tabName}`).classList.remove('hidden');
-                document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
-            }
-
-            function initFoodPlanner() {
-                renderFoodTabs(); // Pre-render all tables
-                
-                foodTabButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        const tabName = button.dataset.tab;
-                        showFoodTab(tabName);
-                    });
-                });
-                
-                showFoodTab('sides'); // Show 'Sides' by default
-            }
-
-            // --- End Food Planner Logic ---
-            
-            // Initialize all components
             initCharts();
-            initFoodPlanner();
         });
     </script>
 </body>
